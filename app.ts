@@ -12,8 +12,9 @@ app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 
 mongoose.connect(
-  "mongodb+srv://admin:admin@cluster0.cgvcn5o.mongodb.net/Flight"
+  `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.cgvcn5o.mongodb.net/Flight`
 );
+
 
 app.use(function (_, res: Response, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
