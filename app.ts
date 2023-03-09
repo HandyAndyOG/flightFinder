@@ -4,17 +4,39 @@ import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 import { fetchData } from "./controllers/FlightData";
 import { Flight } from "./Model/model";
+import { Users } from "./Model/model";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { v4 as uuidv4 } from "uuid";
 
 dotenv.config();
 const app: Application = express();
 const bp = require("body-parser");
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+
+const authenticateToken = (req: any, res: any, next: any) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).send("No valid token");
+  }
+  if (typeof accessTokenSecret === "string") {
+    jwt.verify(token, accessTokenSecret, (err: any, user: any) => {
+      if (err) {
+        return res.status(403).send("No Access");
+      }
+      req.user = user;
+      next();
+    });
+  }
+};
 
 mongoose.connect(
   `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.cgvcn5o.mongodb.net/Flight`
 );
-
 
 app.use(function (_, res: Response, next) {
   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -120,6 +142,30 @@ app.get("/api/flights/selectedTimes", async (req: Request, res: Response) => {
     return res.status(200).send(flightsAtTime);
   }
   return res.status(400).send("too many or too little objects sent");
+});
+
+app.get("/api/users", authenticateToken, async (_: Request, res: Response) => {
+  const allUsers = await Users.find({});
+  res.status(200).send(allUsers);
+});
+app.post("/api/user/register", async (req: Request, res: Response) => {
+  const hashedPass = await bcrypt.hash(req.body.password, 10);
+  try {
+    await Users.create({
+      email: req.body.email,
+      password: hashedPass,
+      uid: uuidv4(),
+      cart: [],
+    })
+    return res.status(200).send('New user created successfully!')
+  } catch(err) {
+    return res.status(400).send(`failed to create new User, ERROR: ${err}`)
+  }
+  
+});
+
+app.get("/api/user/cart", (_: Request, res: Response) => {
+  res.status(200).send("cart here");
 });
 
 export default app;
