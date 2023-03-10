@@ -297,17 +297,41 @@ app.post(
   "/api/user/cart",
   authenticateToken,
   async (req: any, res: Response) => {
-    try {
+    if (req.body.hasOwnProperty("departureAirport_start_journey")) {
       const addToCart = {
-        flight_id: req.body.flight_id,
-        departureAt: req.body.departureAt,
-        arrivalAt: req.body.arrivalAt,
-        seatsBooked: req.body.seatsBooked,
-        tickets: {
-          adultQuantity: req.body.adultQuantity,
-          adultPrice: req.body.adultPrice,
-          childQuantity: req.body.childQuantity,
-          childPrice: req.body.childPrice,
+        connectingFlight: {
+          departureAirport_start_journey: {
+            flight_id: req.body.departureAirport_start_journey.flight_id,
+            departureAt: req.body.departureAirport_start_journey.departureAt,
+            arrivalAt: req.body.departureAirport_start_journey.arrivalAt,
+            seatsBooked: req.body.departureAirport_start_journey.seatsBooked,
+            tickets: {
+              adultQuantity:
+                req.body.departureAirport_start_journey.adultQuantity,
+              adultPrice: req.body.departureAirport_start_journey.adultPrice,
+              childQuantity:
+                req.body.departureAirport_start_journey.childQuantity,
+              childPrice: req.body.departureAirport_start_journey.childPrice,
+            },
+          },
+          connectingAirport_connecting_journey: {
+            flight_id: req.body.connectingAirport_connecting_journey.flight_id,
+            departureAt:
+              req.body.connectingAirport_connecting_journey.departureAt,
+            arrivalAt: req.body.connectingAirport_connecting_journey.arrivalAt,
+            seatsBooked:
+              req.body.connectingAirport_connecting_journey.seatsBooked,
+            tickets: {
+              adultQuantity:
+                req.body.connectingAirport_connecting_journey.adultQuantity,
+              adultPrice:
+                req.body.connectingAirport_connecting_journey.adultPrice,
+              childQuantity:
+                req.body.connectingAirport_connecting_journey.childQuantity,
+              childPrice:
+                req.body.connectingAirport_connecting_journey.childPrice,
+            },
+          },
         },
       };
       const filter = { uid: req.user.uid };
@@ -318,8 +342,33 @@ app.post(
       };
       await Users.updateOne(filter, update);
       return res.status(200).send("Flight added to cart successfully!");
-    } catch (err) {
-      return res.status(400).send(err);
+    } else {
+      try {
+        const addToCart = {
+          directFlight: {
+            flight_id: req.body.flight_id,
+            departureAt: req.body.departureAt,
+            arrivalAt: req.body.arrivalAt,
+            seatsBooked: req.body.seatsBooked,
+            tickets: {
+              adultQuantity: req.body.adultQuantity,
+              adultPrice: req.body.adultPrice,
+              childQuantity: req.body.childQuantity,
+              childPrice: req.body.childPrice,
+            },
+          },
+        };
+        const filter = { uid: req.user.uid };
+        const update = {
+          $push: {
+            cart: addToCart,
+          },
+        };
+        await Users.updateOne(filter, update);
+        return res.status(200).send("Flight added to cart successfully!");
+      } catch (err) {
+        return res.status(400).send(err);
+      }
     }
   }
 );
@@ -327,22 +376,66 @@ app.post(
   "/api/user/cart/checkout",
   authenticateToken,
   async (req: any, res: Response) => {
-    if (req.body.flight_id) {
-      const userProfile = await Users.find({ uid: req.user.uid });
-      const cart = userProfile[0]?.cart || [];
+    const userProfile = await Users.find({ uid: req.user.uid });
+    const cart = userProfile[0]?.cart || [];
+    if (req.body.directFlight) {
       const ticketQuantity = cart.find(
-        (flights) => flights.flight_id === req.body.flight_id
+        (flights) =>
+          flights.directFlight?.flight_id === req.body.directFlight.flight_id
       );
-      if (ticketQuantity?.seatsBooked) {
+      if (ticketQuantity?.directFlight?.seatsBooked) {
         await Flight.findOne(
-          { "itineraries.flight_id": req.body.flight_id },
+          { "itineraries.flight_id": req.body.directFlight.flight_id },
           { "itineraries.$": 1 }
         );
         await Flight.updateOne(
-          { "itineraries.flight_id": req.body.flight_id },
+          { "itineraries.flight_id": req.body.directFlight.flight_id },
           {
             $inc: {
-              "itineraries.$.availableSeats": -ticketQuantity?.seatsBooked,
+              "itineraries.$.availableSeats":
+                -ticketQuantity?.directFlight?.seatsBooked,
+            },
+          }
+        );
+        return res.status(200).send("Available seats have been updated");
+      }
+      return res.status(404).send("No seats booked");
+    } else if (req.body.connectingFlight) {
+      const ticketQuantity = cart.find(
+        (flights) =>
+          flights.connectingFlight?.departureAirport_start_journey
+            ?.flight_id ===
+            req.body.connectingFlight?.departureAirport_start_journey
+              ?.flight_id &&
+          flights.connectingFlight?.connectingAirport_connecting_journey
+            ?.flight_id ===
+            req.body.connectingFlight?.connectingAirport_connecting_journey
+              ?.flight_id
+      );
+      if (ticketQuantity?.connectingFlight?.departureAirport_start_journey?.seatsBooked && ticketQuantity?.connectingFlight?.connectingAirport_connecting_journey?.seatsBooked) {
+        await Flight.findOne(
+          { "itineraries.flight_id": req.body.connectingFlight?.departureAirport_start_journey?.flight_id },
+          { "itineraries.$": 1 }
+        );
+        await Flight.updateOne(
+          { "itineraries.flight_id": req.body.connectingFlight?.departureAirport_start_journey?.flight_id },
+          {
+            $inc: {
+              "itineraries.$.availableSeats":
+                -ticketQuantity?.connectingFlight?.departureAirport_start_journey?.seatsBooked,
+            },
+          }
+        );
+        await Flight.findOne(
+          { "itineraries.flight_id": req.body.connectingFlight?.connectingAirport_connecting_journey?.flight_id },
+          { "itineraries.$": 1 }
+        );
+        await Flight.updateOne(
+          { "itineraries.flight_id": req.body.connectingFlight?.connectingAirport_connecting_journey?.flight_id },
+          {
+            $inc: {
+              "itineraries.$.availableSeats":
+                -ticketQuantity?.connectingFlight?.connectingAirport_connecting_journey?.seatsBooked,
             },
           }
         );
