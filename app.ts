@@ -384,20 +384,31 @@ app.post(
           flights.directFlight?.flight_id === req.body.directFlight.flight_id
       );
       if (ticketQuantity?.directFlight?.seatsBooked) {
-        await Flight.findOne(
+        const flight = await Flight.findOne(
           { "itineraries.flight_id": req.body.directFlight.flight_id },
           { "itineraries.$": 1 }
         );
-        await Flight.updateOne(
-          { "itineraries.flight_id": req.body.directFlight.flight_id },
-          {
-            $inc: {
-              "itineraries.$.availableSeats":
-                -ticketQuantity?.directFlight?.seatsBooked,
-            },
-          }
+
+        const checkSeats = flight?.itineraries.some((data) =>
+          data?.availableSeats && ticketQuantity?.directFlight?.seatsBooked
+            ? data?.availableSeats > ticketQuantity?.directFlight?.seatsBooked
+            : false
         );
-        return res.status(200).send("Available seats have been updated");
+        if (checkSeats) {
+          await Flight.updateOne(
+            { "itineraries.flight_id": req.body.directFlight.flight_id },
+            {
+              $inc: {
+                "itineraries.$.availableSeats":
+                  -ticketQuantity?.directFlight?.seatsBooked,
+              },
+            }
+          );
+          return res.status(200).send("Available seats have been updated");
+        }
+        return res
+          .status(404)
+          .send("You are trying to book more seats than what are available");
       }
       return res.status(404).send("No seats booked");
     } else if (req.body.connectingFlight) {
@@ -412,30 +423,69 @@ app.post(
             req.body.connectingFlight?.connectingAirport_connecting_journey
               ?.flight_id
       );
-      if (ticketQuantity?.connectingFlight?.departureAirport_start_journey?.seatsBooked && ticketQuantity?.connectingFlight?.connectingAirport_connecting_journey?.seatsBooked) {
-        await Flight.findOne(
-          { "itineraries.flight_id": req.body.connectingFlight?.departureAirport_start_journey?.flight_id },
+      if (
+        ticketQuantity?.connectingFlight?.departureAirport_start_journey
+          ?.seatsBooked &&
+        ticketQuantity?.connectingFlight?.connectingAirport_connecting_journey
+          ?.seatsBooked
+      ) {
+        const flight = await Flight.findOne(
+          {
+            "itineraries.flight_id":
+              req.body.connectingFlight?.departureAirport_start_journey
+                ?.flight_id,
+          },
           { "itineraries.$": 1 }
         );
+
+        const checkSeats = flight?.itineraries.some((data) =>
+          data?.availableSeats &&
+          ticketQuantity?.connectingFlight?.departureAirport_start_journey
+            ?.seatsBooked
+            ? data?.availableSeats >
+              ticketQuantity?.connectingFlight?.departureAirport_start_journey
+                ?.seatsBooked
+            : false
+        );
+        if (!checkSeats) {
+          return res
+            .status(404)
+            .send("You are trying to book more seats than what are available");
+        }
         await Flight.updateOne(
-          { "itineraries.flight_id": req.body.connectingFlight?.departureAirport_start_journey?.flight_id },
+          {
+            "itineraries.flight_id":
+              req.body.connectingFlight?.departureAirport_start_journey
+                ?.flight_id,
+          },
           {
             $inc: {
               "itineraries.$.availableSeats":
-                -ticketQuantity?.connectingFlight?.departureAirport_start_journey?.seatsBooked,
+                -ticketQuantity?.connectingFlight
+                  ?.departureAirport_start_journey?.seatsBooked,
             },
           }
         );
+
         await Flight.findOne(
-          { "itineraries.flight_id": req.body.connectingFlight?.connectingAirport_connecting_journey?.flight_id },
+          {
+            "itineraries.flight_id":
+              req.body.connectingFlight?.connectingAirport_connecting_journey
+                ?.flight_id,
+          },
           { "itineraries.$": 1 }
         );
         await Flight.updateOne(
-          { "itineraries.flight_id": req.body.connectingFlight?.connectingAirport_connecting_journey?.flight_id },
+          {
+            "itineraries.flight_id":
+              req.body.connectingFlight?.connectingAirport_connecting_journey
+                ?.flight_id,
+          },
           {
             $inc: {
               "itineraries.$.availableSeats":
-                -ticketQuantity?.connectingFlight?.connectingAirport_connecting_journey?.seatsBooked,
+                -ticketQuantity?.connectingFlight
+                  ?.connectingAirport_connecting_journey?.seatsBooked,
             },
           }
         );
