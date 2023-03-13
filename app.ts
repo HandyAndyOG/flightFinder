@@ -8,13 +8,25 @@ import { Users } from "./Model/model";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
+import cors from "cors";
 
 dotenv.config();
 const app: Application = express();
 const bp = require("body-parser");
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
+app.use(cors());
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+
+// app.use(function (_, res: Response, next) {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   next();
+// });
 
 const authenticateToken = (req: any, res: any, next: any) => {
   const authHeader = req.headers["authorization"];
@@ -37,16 +49,6 @@ const authenticateToken = (req: any, res: any, next: any) => {
 mongoose.connect(
   `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.cgvcn5o.mongodb.net/Flight`
 );
-
-app.use(function (_, res: Response, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  next();
-});
 
 const flightChecker = async (
   departureAirport: string,
@@ -157,7 +159,8 @@ app.get("/api/flights", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/api/flights/selectedTimes", async (req: Request, res: Response) => {
+app.post("/api/flights/selectedTimes", async (req: Request, res: Response) => {
+  console.log(req.body)
   const flightSpecifications = req.body;
   const departureTime = new Date(flightSpecifications.departureTime);
   const arrivalTime = new Date(flightSpecifications.arrivalTime);
@@ -239,6 +242,12 @@ app.get("/api/flights/selectedTimes", async (req: Request, res: Response) => {
 app.get("/api/users", authenticateToken, async (_: Request, res: Response) => {
   const allUsers = await Users.find({});
   res.status(200).send(allUsers);
+});
+app.get("/api/user", authenticateToken, async (req: any, res: Response) => {
+  const user = await Users.find({ uid: req.user.uid });
+  res
+    .status(200)
+    .send({ email: user[0]?.email, uid: user[0]?.uid, cart: user[0]?.cart, status: 'success' });
 });
 
 app.post("/api/user/register", async (req: Request, res: Response) => {
