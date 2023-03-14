@@ -17,6 +17,7 @@ interface Itinerary {
   arrivalAt: string;
   availableSeats: number;
   prices: Prices;
+  _id: string;
 }
 export interface Flights {
   route_id: string;
