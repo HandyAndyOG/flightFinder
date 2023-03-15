@@ -16,17 +16,8 @@ const bp = require("body-parser");
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 app.use(cors());
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
-// app.use(function (_, res: Response, next) {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//   next();
-// });
+const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
 const authenticateToken = (req: any, res: any, next: any) => {
   const authHeader = req.headers["authorization"];
@@ -84,6 +75,7 @@ const flightChecker = async (
           itineraries: departureData.itineraries.flatMap((departureIt) => {
             return arrivalData.itineraries.flatMap((arrivalIt) => {
               return {
+                _id: uuidv4(),
                 departureAirport_start_journey: {
                   flight_id: departureIt.flight_id,
                   departureAt: departureIt.departureAt,
@@ -160,7 +152,6 @@ app.get("/api/flights", async (req: Request, res: Response) => {
 });
 
 app.post("/api/flights/selectedTimes", async (req: Request, res: Response) => {
-  console.log(req.body)
   const flightSpecifications = req.body;
   const departureTime = new Date(flightSpecifications.departureTime);
   const arrivalTime = new Date(flightSpecifications.arrivalTime);
@@ -214,7 +205,7 @@ app.post("/api/flights/selectedTimes", async (req: Request, res: Response) => {
     const directFlight = await Flight.find({
       departureDestination: flightSpecifications.departureAt,
       arrivalDestination: flightSpecifications.arrivalAt,
-    });
+    })
     const directFlightsAtTime = directFlight
       .map((flight) => {
         const matchingItineraries = flight?.itineraries.filter((data) => {
