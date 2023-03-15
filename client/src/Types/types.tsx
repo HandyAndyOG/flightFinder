@@ -46,13 +46,13 @@ interface Cart {
   seatsBooked: number;
   tickets: Tickets;
 }
-interface ConnectingFlights {
+interface ConnectingFlight {
   departureAirport_start_journey: Cart;
   connectingAirport_connecting_journey: Cart;
 }
 interface FlightType {
   directFlight: Cart;
-  connectingFlights: ConnectingFlights;
+  connectingFlight: ConnectingFlight;
 }
 // export interface Cart {
 //   userId: string | undefined;
@@ -62,8 +62,8 @@ interface FlightType {
 export interface States {
   allFlights: Flights[];
   setAllFlights: React.Dispatch<React.SetStateAction<Flights[]>>;
-  user: User[];
-  setUser: React.Dispatch<React.SetStateAction<User[]>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   search: string | undefined;
   setToken: React.Dispatch<React.SetStateAction<string | undefined>>;
   token: string | undefined;

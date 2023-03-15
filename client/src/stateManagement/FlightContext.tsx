@@ -5,7 +5,7 @@ import { States, Flights, User } from "../Types/types";
 export const FlightContext = createContext<States>({
   allFlights: [],
   setAllFlights: () => {},
-  user: [],
+  user: null,
   setUser: () => {},
   search: "",
   setSearch: () => {},
@@ -23,7 +23,7 @@ const FlightProvider: React.FC<{ children: React.ReactElement }> = ({
   children,
 }) => {
   const [allFlights, setAllFlights] = useState<Flights[]>([]);
-  const [user, setUser] = useState<User[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [search, setSearch] = useState<string | undefined>();
   const [filter, setFilter] = useState<string[]>([]);
   const [token, setToken] = useState<string | undefined>();

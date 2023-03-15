@@ -4,7 +4,7 @@ import { NavigateFn } from '@reach/router';
 
 export const authUser = (
   token: string,
-  setUser: React.Dispatch<React.SetStateAction<User[]>>,
+  setUser: React.Dispatch<React.SetStateAction<User | null>>,
   navigate: any
 ) => {
   const headers = {

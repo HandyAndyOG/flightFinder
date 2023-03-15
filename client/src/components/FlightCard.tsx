@@ -7,7 +7,8 @@ interface FlightData {
 }
 
 const FlightCard = () => {
-  const { allFlights } = useContext(FlightContext);
+  const { allFlights, token } = useContext(FlightContext);
+  console.log(token)
   const [clicked, setClicked] = useState<FlightData>({});
   const [selectedChildOption, setSelectedChildOption] = useState("");
   const [selectedAdultDirectOption, setSelectedAdultDirectOption] =
@@ -20,22 +21,98 @@ const FlightCard = () => {
   const [selectedAdultConnectingOption, setSelectedAdultConnectingOption] =
     useState("");
 
+  const flightTime = (departTime: string, arrivalTime: string) => {
+    const startTime: Date = new Date(departTime);
+    const endTime: Date = new Date(arrivalTime);
+    const diffMilliseconds: number = endTime.getTime() - startTime.getTime();
+    const diffMinutes: number = diffMilliseconds / 60000;
+    const diffHours: number = Math.floor(diffMinutes / 60);
+    const remainingMinutes: number = Math.round(diffMinutes % 60);
+    return { hours: diffHours, minutes: remainingMinutes };
+  };
 
-const flightTime = (departTime: string, arrivalTime: string) => {
-  const startTime: Date = new Date(departTime);
-  const endTime: Date = new Date(arrivalTime);
-  const diffMilliseconds: number = endTime.getTime() - startTime.getTime();
-  const diffMinutes: number = diffMilliseconds / 60000;
-  const diffHours: number = Math.floor(diffMinutes / 60);
-  const remainingMinutes: number = Math.round(diffMinutes % 60);
-  return { hours: diffHours, minutes: remainingMinutes };
-};
+  const bookFlight = (data: any) => {
+    if (Number(selectedChildOption) > 0 || Number(selectedAdultOption) > 0) {
+      const flight = {
+        departureAirport_start_journey: {
+          flight_id: data.departureAirport_start_journey.flight_id,
+          departureAt: data.departureAirport_start_journey.departureAt,
+          arrivalAt: data.departureAirport_start_journey.arrivalAt,
+          seatsBooked: Number(selectedChildOption) + Number(selectedAdultOption),
+          adultQuantity: selectedAdultOption,
+          adultPrice: data.departureAirport_start_journey.prices.adult,
+          childQuantity: selectedChildOption,
+          childPrice: data.departureAirport_start_journey.prices.child,
+        },
+        connectingAirport_connecting_journey: {
+          flight_id: data.connectingAirport_connecting_journey.flight_id,
+          departureAt:
+            data.connectingAirport_connecting_journey.departureAt,
+          arrivalAt: data.connectingAirport_connecting_journey.arrivalAt,
+          seatsBooked: Number(selectedChildConnectingOption) + Number(selectedAdultConnectingOption),
+          adultQuantity: selectedAdultOption,
+          adultPrice:
+            data.connectingAirport_connecting_journey.prices.adult,
+          childQuantity: selectedChildOption,
+          childPrice:
+            data.connectingAirport_connecting_journey.prices.child,
+        },
+      };
+    const headers = {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    };
 
-  const bookFlight = () => {
-    console.log(selectedChildOption, "child");
-    console.log(selectedAdultOption, "adult");
-    console.log(selectedChildConnectingOption, "connecting child");
-    console.log(selectedAdultConnectingOption, "connecting adult");
+    const requestOptions = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(flight)
+    };
+      fetch("http://localhost:8080/api/user/cart", requestOptions)
+      .then((response) => response.json())
+      .then((data) => { console.log(data)})
+      .catch((err) => console.log(err))
+      .finally(() => {
+        setSelectedChildOption('')
+        setSelectedChildConnectingOption('')
+        setSelectedAdultConnectingOption('')
+        setSelectedAdultOption('')
+      });
+    } else if (
+      Number(selectedChildDirectOption) > 0 ||
+      Number(selectedAdultDirectOption) > 0
+    ) {
+      const flight = {
+        flight_id: data.flight_id,
+        departureAt: data.departureAt,
+        arrivalAt: data.arrivalAt,
+        seatsBooked:
+          Number(selectedAdultDirectOption) + Number(selectedChildDirectOption),
+        adultQuantity: Number(selectedAdultDirectOption),
+        adultPrice: data.prices.adult,
+        childQuantity: Number(selectedChildDirectOption),
+        childPrice: data.prices.child,
+      };
+      const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      };
+  
+      const requestOptions = {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify(flight)
+      };
+        fetch("http://localhost:8080/api/user/cart", requestOptions)
+        .then((response) => response.json())
+        .then((data) => { console.log(data)})
+        .catch((err) => console.log(err))
+        .finally(() => {
+          setSelectedAdultDirectOption('')
+          setSelectedChildDirectOption('')
+        });
+
+    }
   };
 
   const seeFlight = (data: any) => {
@@ -115,7 +192,10 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                                 {" => "}
                                 {flights.intermediateDestination}
                               </h2>
-                              <h3>Flight id: {data.departureAirport_start_journey.flight_id}</h3>
+                              <h3>
+                                Flight id:{" "}
+                                {data.departureAirport_start_journey.flight_id}
+                              </h3>
                               <h3>
                                 Departure:{" "}
                                 {new Intl.DateTimeFormat("en-US", {
@@ -153,13 +233,13 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                               <h3>
                                 Duration:{" "}
                                 {
-                                  data.departureAirport_start_journey
-                                    .flightTime.hours
+                                  data.departureAirport_start_journey.flightTime
+                                    .hours
                                 }{" "}
                                 Hours{" "}
                                 {
-                                  data.departureAirport_start_journey
-                                    .flightTime.minutes
+                                  data.departureAirport_start_journey.flightTime
+                                    .minutes
                                 }{" "}
                                 min
                               </h3>
@@ -178,12 +258,12 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                                 <p>
                                   Adult:{" "}
                                   {
-                                    data.departureAirport_start_journey
-                                      .prices.currency
+                                    data.departureAirport_start_journey.prices
+                                      .currency
                                   }{" "}
                                   {
-                                    data.departureAirport_start_journey
-                                      .prices.adult
+                                    data.departureAirport_start_journey.prices
+                                      .adult
                                   }
                                 </p>
                                 <select
@@ -205,12 +285,12 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                                 <p>
                                   Child:{" "}
                                   {
-                                    data.departureAirport_start_journey
-                                      .prices.currency
+                                    data.departureAirport_start_journey.prices
+                                      .currency
                                   }{" "}
                                   {
-                                    data.departureAirport_start_journey
-                                      .prices.child
+                                    data.departureAirport_start_journey.prices
+                                      .child
                                   }
                                 </p>
                                 <select
@@ -235,7 +315,13 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                                 {" => "}
                                 {flights.arrivalDestination}
                               </h2>
-                              <h3>Flight id: {data.connectingAirport_connecting_journey.flight_id}</h3>
+                              <h3>
+                                Flight id:{" "}
+                                {
+                                  data.connectingAirport_connecting_journey
+                                    .flight_id
+                                }
+                              </h3>
                               <h3>
                                 Departure:{" "}
                                 {new Intl.DateTimeFormat("en-US", {
@@ -273,13 +359,13 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                               <h3>
                                 Duration:{" "}
                                 {
-                                  data.connectingAirport_connecting_journey.flightTime
-                                    .hours
+                                  data.connectingAirport_connecting_journey
+                                    .flightTime.hours
                                 }{" "}
                                 Hours{" "}
                                 {
-                                  data.connectingAirport_connecting_journey.flightTime
-                                    .minutes
+                                  data.connectingAirport_connecting_journey
+                                    .flightTime.minutes
                                 }{" "}
                                 min
                               </h3>
@@ -298,12 +384,12 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                                 <p>
                                   Adult:{" "}
                                   {
-                                    data.connectingAirport_connecting_journey.prices
-                                      .currency
+                                    data.connectingAirport_connecting_journey
+                                      .prices.currency
                                   }{" "}
                                   {
-                                    data.connectingAirport_connecting_journey.prices
-                                      .adult
+                                    data.connectingAirport_connecting_journey
+                                      .prices.adult
                                   }
                                 </p>
                                 <select
@@ -329,12 +415,12 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                                 <p>
                                   Child:{" "}
                                   {
-                                    data.connectingAirport_connecting_journey.prices
-                                      .currency
+                                    data.connectingAirport_connecting_journey
+                                      .prices.currency
                                   }{" "}
                                   {
-                                    data.connectingAirport_connecting_journey.prices
-                                      .child
+                                    data.connectingAirport_connecting_journey
+                                      .prices.child
                                   }
                                 </p>
                                 <select
@@ -359,60 +445,43 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                             </div>
                           </div>
                           <button
-                            onClick={bookFlight}
-                            className="border rounded px-2 py-1 w-20 self-center mt-2"
+                            onClick={() => bookFlight(data)}
+                            className="border rounded px-2 py-1 w-25 self-center mt-2"
                           >
-                            Book
+                            Add to Cart
                           </button>
                         </article>
                       ) : (
                         <article className="flex flex-col border rounded py-3 px-3 mb-3">
                           <h3>Flight id: {data.flight_id}</h3>
                           <h3>
-                                Departure:{" "}
-                                {new Intl.DateTimeFormat("en-US", {
-                                  dateStyle: "long",
-                                }).format(
-                                  new Date(
-                                    data.departureAt
-                                  )
-                                )}{" "}
-                                {new Intl.DateTimeFormat("en-US", {
-                                  timeStyle: "long",
-                                }).format(
-                                  new Date(
-                                    data.departureAt
-                                  )
-                                )}
-                              </h3>
-                              <h3>
-                                Arrival:{" "}
-                                {new Intl.DateTimeFormat("en-US", {
-                                  dateStyle: "long",
-                                }).format(
-                                  new Date(
-                                    data.arrivalAt
-                                  )
-                                )}{" "}
-                                {new Intl.DateTimeFormat("en-US", {
-                                  timeStyle: "long",
-                                }).format(
-                                  new Date(
-                                    data.arrivalAt
-                                  )
-                                )}
-                              </h3>
-                              <h3>
-                                Duration:{" "}
-                                {
-                                  flightTime(data.departureAt, data.arrivalAt).hours
-                                }{" "}
-                                Hours{" "}
-                                {
-                                  flightTime(data.departureAt, data.arrivalAt).minutes
-                                }{" "}
-                                min
-                              </h3>
+                            Departure:{" "}
+                            {new Intl.DateTimeFormat("en-US", {
+                              dateStyle: "long",
+                            }).format(new Date(data.departureAt))}{" "}
+                            {new Intl.DateTimeFormat("en-US", {
+                              timeStyle: "long",
+                            }).format(new Date(data.departureAt))}
+                          </h3>
+                          <h3>
+                            Arrival:{" "}
+                            {new Intl.DateTimeFormat("en-US", {
+                              dateStyle: "long",
+                            }).format(new Date(data.arrivalAt))}{" "}
+                            {new Intl.DateTimeFormat("en-US", {
+                              timeStyle: "long",
+                            }).format(new Date(data.arrivalAt))}
+                          </h3>
+                          <h3>
+                            Duration:{" "}
+                            {flightTime(data.departureAt, data.arrivalAt).hours}{" "}
+                            Hours{" "}
+                            {
+                              flightTime(data.departureAt, data.arrivalAt)
+                                .minutes
+                            }{" "}
+                            min
+                          </h3>
                           <p>
                             Available seats:{" "}
                             {data.availableSeats -
@@ -452,10 +521,10 @@ const flightTime = (departTime: string, arrivalTime: string) => {
                             </select>
                           </div>
                           <button
-                            onClick={bookFlight}
-                            className="border rounded px-2 py-1 w-20 self-end mt-2"
+                            onClick={() => bookFlight(data)}
+                            className="border rounded px-2 py-1 w-25 self-end mt-2"
                           >
-                            Book
+                            Add to Cart
                           </button>
                         </article>
                       ))}

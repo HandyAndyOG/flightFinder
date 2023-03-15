@@ -288,6 +288,7 @@ app.get(
     const userCart = {
       email: userProfile[0]?.email,
       cart: userProfile[0]?.cart,
+      uid: userProfile[0]?.uid
     };
     res.status(200).send(userCart);
   }
@@ -341,7 +342,7 @@ app.post(
         },
       };
       await Users.updateOne(filter, update);
-      return res.status(200).send("Flight added to cart successfully!");
+      return res.status(200).send({status: "success"});
     } else {
       try {
         const addToCart = {
@@ -365,7 +366,7 @@ app.post(
           },
         };
         await Users.updateOne(filter, update);
-        return res.status(200).send("Flight added to cart successfully!");
+        return res.status(200).send({status: "success"});
       } catch (err) {
         return res.status(400).send(err);
       }
