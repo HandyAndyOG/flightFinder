@@ -45,82 +45,91 @@ const flightChecker = async (
   departureAirport: string,
   arrivalAirport: string
 ) => {
-  const onlyCorrectDepart = await Flight.find({
-    departureDestination: departureAirport,
-    arrivalDestination: { $ne: arrivalAirport },
-  });
-  const connectingDeparts = onlyCorrectDepart.map((flight) => ({
-    departureDestination: flight.arrivalDestination,
-  }));
-  const onlyCorrectArrival = await Flight.find({
-    arrivalDestination: arrivalAirport,
-    $or: connectingDeparts,
-  });
-  const connectingArrival = onlyCorrectArrival.map((flight) => ({
-    arrivalDestination: flight.departureDestination,
-  }));
+  try {
+    const onlyCorrectDepart = await Flight.find({
+      departureDestination: departureAirport,
+      arrivalDestination: { $ne: arrivalAirport },
+    });
+    console.log(onlyCorrectDepart, 'onlyCorrectDepart')
+    const connectingDeparts = onlyCorrectDepart.map((flight) => ({
+      departureDestination: flight.arrivalDestination,
+    }));
+    const onlyCorrectArrival = await Flight.find({
+      arrivalDestination: arrivalAirport,
+      $or: connectingDeparts,
+    });
+    console.log(onlyCorrectArrival, 'onlyCorrectArrival')
+    const connectingArrival = onlyCorrectArrival.map((flight) => ({
+      arrivalDestination: flight.departureDestination,
+    }));
+  console.log(connectingArrival, 'connectingArrival')
+    const connectingFlights = onlyCorrectDepart.filter(
+      (data) =>
+        data.arrivalDestination === connectingArrival[0]?.arrivalDestination
+    );
+    console.log(connectingFlights,'connectingFlights')
+    const combinedConnectingFlights = connectingFlights.flatMap(
+      (departureData) => {
+        return onlyCorrectArrival.flatMap((arrivalData) => {
+          return {
+            route_id: `${departureData.route_id}${arrivalData.route_id}`,
+            departureDestination: departureData.departureDestination,
+            intermediateDestination: arrivalData.departureDestination,
+            arrivalDestination: arrivalData.arrivalDestination,
+            itineraries: departureData.itineraries.flatMap((departureIt) => {
+              return arrivalData.itineraries.flatMap((arrivalIt) => {
+                return {
+                  _id: uuidv4(),
+                  departureAirport_start_journey: {
+                    flight_id: departureIt.flight_id,
+                    departureAt: departureIt.departureAt,
+                    arrivalAt: departureIt.arrivalAt,
+                    flightTime:
+                      departureIt.departureAt && departureIt.arrivalAt
+                        ? flightTime(
+                            departureIt.departureAt,
+                            departureIt.arrivalAt
+                          )
+                        : 0,
+                    availableSeats: departureIt.availableSeats,
+                    prices: {
+                      currency: departureIt?.prices?.currency,
+                      adult: departureIt?.prices?.adult,
+                      child: departureIt?.prices?.child,
+                    },
+                  },
+                  layover:
+                    departureIt.arrivalAt && arrivalIt.departureAt
+                      ? flightTime(departureIt.arrivalAt, arrivalIt.departureAt)
+                      : null,
+                  connectingAirport_connecting_journey: {
+                    flight_id: arrivalIt.flight_id,
+                    departureAt: arrivalIt.departureAt,
+                    arrivalAt: arrivalIt.arrivalAt,
+                    flightTime:
+                      arrivalIt.departureAt && arrivalIt.arrivalAt
+                        ? flightTime(arrivalIt.departureAt, arrivalIt.arrivalAt)
+                        : 0,
+                    availableSeats: arrivalIt.availableSeats,
+                    prices: {
+                      currency: arrivalIt?.prices?.currency,
+                      adult: arrivalIt?.prices?.adult,
+                      child: arrivalIt?.prices?.child,
+                    },
+                  },
+                };
+              });
+            }),
+          };
+        });
+      }
+    );
+    return combinedConnectingFlights;
 
-  const connectingFlights = onlyCorrectDepart.filter(
-    (data) =>
-      data.arrivalDestination === connectingArrival[0]?.arrivalDestination
-  );
-  const combinedConnectingFlights = connectingFlights.flatMap(
-    (departureData) => {
-      return onlyCorrectArrival.flatMap((arrivalData) => {
-        return {
-          route_id: `${departureData.route_id}${arrivalData.route_id}`,
-          departureDestination: departureData.departureDestination,
-          intermediateDestination: arrivalData.departureDestination,
-          arrivalDestination: arrivalData.arrivalDestination,
-          itineraries: departureData.itineraries.flatMap((departureIt) => {
-            return arrivalData.itineraries.flatMap((arrivalIt) => {
-              return {
-                _id: uuidv4(),
-                departureAirport_start_journey: {
-                  flight_id: departureIt.flight_id,
-                  departureAt: departureIt.departureAt,
-                  arrivalAt: departureIt.arrivalAt,
-                  flightTime:
-                    departureIt.departureAt && departureIt.arrivalAt
-                      ? flightTime(
-                          departureIt.departureAt,
-                          departureIt.arrivalAt
-                        )
-                      : 0,
-                  availableSeats: departureIt.availableSeats,
-                  prices: {
-                    currency: departureIt?.prices?.currency,
-                    adult: departureIt?.prices?.adult,
-                    child: departureIt?.prices?.child,
-                  },
-                },
-                layover:
-                  departureIt.arrivalAt && arrivalIt.departureAt
-                    ? flightTime(departureIt.arrivalAt, arrivalIt.departureAt)
-                    : null,
-                connectingAirport_connecting_journey: {
-                  flight_id: arrivalIt.flight_id,
-                  departureAt: arrivalIt.departureAt,
-                  arrivalAt: arrivalIt.arrivalAt,
-                  flightTime:
-                    arrivalIt.departureAt && arrivalIt.arrivalAt
-                      ? flightTime(arrivalIt.departureAt, arrivalIt.arrivalAt)
-                      : 0,
-                  availableSeats: arrivalIt.availableSeats,
-                  prices: {
-                    currency: arrivalIt?.prices?.currency,
-                    adult: arrivalIt?.prices?.adult,
-                    child: arrivalIt?.prices?.child,
-                  },
-                },
-              };
-            });
-          }),
-        };
-      });
-    }
-  );
-  return combinedConnectingFlights;
+  } catch (err) {
+    console.log(err)
+    return
+  }
 };
 
 const flightTime = (departTime: string, arrivalTime: string) => {
@@ -161,71 +170,96 @@ app.post("/api/flights/selectedTimes", async (req: Request, res: Response) => {
       flightSpecifications.departureAt,
       flightSpecifications.arrivalAt
     );
-
-    const connectingFlightsNoNegativeLayovers = connectingFlightsRaw
-      .map((data) => {
-        const matchingLayovers = data.itineraries.filter((flights) => {
-          return flights?.layover?.hours ? flights?.layover?.hours > 0 : "";
-        });
-        return matchingLayovers?.length
-          ? { ...data, itineraries: matchingLayovers }
-          : null;
-      })
-      .filter(Boolean);
-
-    const connectingFlightsAtTime = connectingFlightsNoNegativeLayovers
-      .map((flight) => {
-        const matchingItineraries = flight?.itineraries.filter((data) => {
-          if (
-            data.departureAirport_start_journey.departureAt &&
-            data.connectingAirport_connecting_journey.arrivalAt
-          ) {
-            return (
-              departureTime.getTime() <=
+      if(connectingFlightsRaw) {
+        const connectingFlightsNoNegativeLayovers = connectingFlightsRaw
+          .map((data) => {
+            const matchingLayovers = data.itineraries.filter((flights) => {
+              return flights?.layover?.hours ? flights?.layover?.hours > 0 : "";
+            });
+            return matchingLayovers?.length
+              ? { ...data, itineraries: matchingLayovers }
+              : null;
+          })
+          .filter(Boolean);
+  
+      const connectingFlightsAtTime = connectingFlightsNoNegativeLayovers
+        .map((flight) => {
+          const matchingItineraries = flight?.itineraries.filter((data) => {
+            if (
+              data.departureAirport_start_journey.departureAt &&
+              data.connectingAirport_connecting_journey.arrivalAt
+            ) {
+              return (
+                departureTime.getTime() <=
+                  new Date(
+                    data.departureAirport_start_journey.departureAt
+                  ).getTime() &&
+                arrivalTime.getTime() >=
+                  new Date(
+                    data.connectingAirport_connecting_journey.arrivalAt
+                  ).getTime() &&
                 new Date(
                   data.departureAirport_start_journey.departureAt
-                ).getTime() &&
-              arrivalTime.getTime() >=
-                new Date(
-                  data.connectingAirport_connecting_journey.arrivalAt
-                ).getTime() &&
-              new Date(
-                data.departureAirport_start_journey.departureAt
-              ).getTime() < arrivalTime.getTime()
-            );
-          }
-          return false;
-        });
-        return matchingItineraries?.length
-          ? { ...flight, itineraries: matchingItineraries }
-          : null;
+                ).getTime() < arrivalTime.getTime()
+              );
+            }
+            return false;
+          });
+          return matchingItineraries?.length
+            ? { ...flight, itineraries: matchingItineraries }
+            : null;
+        })
+        .filter(Boolean);
+  
+      const directFlight = await Flight.find({
+        departureDestination: flightSpecifications.departureAt,
+        arrivalDestination: flightSpecifications.arrivalAt,
       })
-      .filter(Boolean);
-
-    const directFlight = await Flight.find({
-      departureDestination: flightSpecifications.departureAt,
-      arrivalDestination: flightSpecifications.arrivalAt,
-    })
-    const directFlightsAtTime = directFlight
-      .map((flight) => {
-        const matchingItineraries = flight?.itineraries.filter((data) => {
-          if (data.departureAt && data.arrivalAt) {
-            return (
-              departureTime.getTime() <= new Date(data.departureAt).getTime() &&
-              arrivalTime.getTime() >= new Date(data.arrivalAt).getTime() &&
-              new Date(data.departureAt).getTime() < arrivalTime.getTime()
-            );
-          }
-          return false;
-        });
-        return matchingItineraries?.length
-          ? { ...flight.toObject(), itineraries: matchingItineraries }
-          : null;
-      })
-      .filter(Boolean);
-
-    const allFlights = [...directFlightsAtTime, ...connectingFlightsAtTime];
-    return res.status(200).send(allFlights);
+      const directFlightsAtTime = directFlight
+        .map((flight) => {
+          const matchingItineraries = flight?.itineraries.filter((data) => {
+            if (data.departureAt && data.arrivalAt) {
+              return (
+                departureTime.getTime() <= new Date(data.departureAt).getTime() &&
+                arrivalTime.getTime() >= new Date(data.arrivalAt).getTime() &&
+                new Date(data.departureAt).getTime() < arrivalTime.getTime()
+              );
+            }
+            return false;
+          });
+          return matchingItineraries?.length
+            ? { ...flight.toObject(), itineraries: matchingItineraries }
+            : null;
+        })
+        .filter(Boolean);
+  
+      const allFlights = [...directFlightsAtTime, ...connectingFlightsAtTime];
+      console.log(allFlights)
+      return res.status(200).send(allFlights);
+      } else {
+        const directFlight = await Flight.find({
+          departureDestination: flightSpecifications.departureAt,
+          arrivalDestination: flightSpecifications.arrivalAt,
+        })
+        const directFlightsAtTime = directFlight
+          .map((flight) => {
+            const matchingItineraries = flight?.itineraries.filter((data) => {
+              if (data.departureAt && data.arrivalAt) {
+                return (
+                  departureTime.getTime() <= new Date(data.departureAt).getTime() &&
+                  arrivalTime.getTime() >= new Date(data.arrivalAt).getTime() &&
+                  new Date(data.departureAt).getTime() < arrivalTime.getTime()
+                );
+              }
+              return false;
+            });
+            return matchingItineraries?.length
+              ? { ...flight.toObject(), itineraries: matchingItineraries }
+              : null;
+          })
+          .filter(Boolean);
+      return res.status(200).send(directFlightsAtTime);
+      }
   }
   return res.status(400).send("too many or too little objects sent");
 });
@@ -405,11 +439,11 @@ app.post(
               },
             }
           );
-          return res.status(200).send("Available seats have been updated");
+          return res.status(200).send({status: "success"});
         }
         return res
           .status(404)
-          .send("You are trying to book more seats than what are available");
+          .send({message: "You are trying to book more seats than what are available"});
       }
       return res.status(404).send("No seats booked");
     } else if (req.body.connectingFlight) {
@@ -451,7 +485,7 @@ app.post(
         if (!checkSeats) {
           return res
             .status(404)
-            .send("You are trying to book more seats than what are available");
+            .send({message: "You are trying to book more seats than what are available"});
         }
         await Flight.updateOne(
           {
@@ -490,11 +524,11 @@ app.post(
             },
           }
         );
-        return res.status(200).send("Available seats have been updated");
+        return res.status(200).send({status: 'success'});
       }
-      return res.status(404).send("No seats booked");
+      return res.status(404).send({message: "No seats booked"});
     }
-    return res.status(405).send("no flight_id provided");
+    return res.status(405).send({message: "no flight_id provided"});
   }
 );
 

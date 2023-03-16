@@ -72,7 +72,18 @@ export interface States {
   setFilter: React.Dispatch<React.SetStateAction<string[]>>;
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  addedToCart: boolean;
+  setAddedToCart: React.Dispatch<React.SetStateAction<boolean>>;
+  checkbox: boolean;
+  setCheckbox: React.Dispatch<React.SetStateAction<boolean>>;
   localstorage: string | null
   setLocalstorage: React.Dispatch<React.SetStateAction<string | null>>
-
+  departureAt: string | undefined
+  setDepartureAt: React.Dispatch<React.SetStateAction<string | undefined>>
+  arrivalAt: string | undefined
+  setArrivalAt: React.Dispatch<React.SetStateAction<string | undefined>>
+  returnEndDate: Date | null, 
+  setReturnEndDate: React.Dispatch<React.SetStateAction<Date | null>>
+  returnStartDate: Date | null, 
+  setReturnStartDate: React.Dispatch<React.SetStateAction<Date | null>>
 }
