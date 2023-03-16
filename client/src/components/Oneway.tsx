@@ -3,9 +3,12 @@ import { FlightContext } from "../stateManagement/FlightContext";
 import { v4 as uuidv4 } from "uuid";
 import { seeFlight } from "../helperFunctions/seeFlights";
 import { seats } from "../helperFunctions/seats";
+import { FaPlaneDeparture, FaPlaneArrival } from "react-icons/fa";
 import { bookFlight } from "../helperFunctions/bookFlights";
 import { flightTime } from "../helperFunctions/flightTime";
 import { searchReturnFlight } from "../helperFunctions/searchReturnFlight";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface FlightData {
   [key: string]: boolean;
@@ -24,6 +27,13 @@ const Oneway = () => {
     departureAt,
     arrivalAt,
   } = useContext(FlightContext);
+
+  const showToastMessage = () => {
+    toast.success('Added to Cart!', {
+        position: toast.POSITION.BOTTOM_CENTER
+    });
+};
+
   const [clicked, setClicked] = useState<FlightData>({});
   const [selectedChildOption, setSelectedChildOption] = useState("");
   const [selectedAdultOption, setSelectedAdultOption] = useState("");
@@ -37,28 +47,31 @@ const Oneway = () => {
     useState("");
 
   return (
-    <section className="flex items-center flex-col">
+    <section className="flex items-center flex-col w-3/4  rounded">
       {allFlights ? (
         allFlights.map((flights) => {
           return (
-            <article key={uuidv4()} className=" w-4/5">
+            <article key={uuidv4()} className="w-full">
               {flights.itineraries.map((data) => {
                 return (
                   <>
                     <article
                       key={uuidv4()}
-                      className=" p-3 border rounded mb-1"
+                      className=" p-3 mb-1 bg-indigo-400 rounded-lg text-white shadow"
                       onClick={() => seeFlight(data, setClicked)}
                     >
                       {data.connectingAirport_connecting_journey &&
                       data.departureAirport_start_journey ? (
                         <>
                           <div>
-                            <h2 className="">
-                              {flights.departureDestination} to{" "}
+                            <div className="flex flex-row items-center border-b-2 pb-2 justify-start mb-2">
+                            <h2 className="px-4 text-indigo-900">{flights.departureDestination}</h2>
+                            <FaPlaneDeparture className="text-indigo-900"/>
+                            <h2 className="px-4 text-indigo-900">
                               {flights.intermediateDestination}
                             </h2>
-                            <p>
+                            </div>
+                            <p className="p-5">
                               Estimated price: ~
                               {
                                 data.connectingAirport_connecting_journey.prices
@@ -73,19 +86,25 @@ const Oneway = () => {
                             </p>
                           </div>
                           <div>
-                            <h2>
-                              {flights.intermediateDestination} to{" "}
+                            <div className="flex flex-row items-center border-t-2 pt-2 justify-end mt-2">
+                              <h2 className="px-4 text-indigo-900">{flights.intermediateDestination}</h2>
+                              <FaPlaneArrival className="text-indigo-900"/>
+                            <h2 className="px-4 text-indigo-900">
                               {flights.arrivalDestination}
                             </h2>
+                            </div>
                           </div>
                         </>
                       ) : (
                         <article key={uuidv4()}>
-                          <h2>
-                            {flights.departureDestination} to{" "}
+                          <div className="flex flex-row items-center border-b-2 pb-2 justify-center mb-2">
+                            <h2 className="px-4 text-indigo-900">{flights.departureDestination}</h2>
+                            {<FaPlaneDeparture className="text-indigo-900"/>}
+                          <h2 className="px-4 text-indigo-900">
                             {flights.arrivalDestination}
                           </h2>
-                          <p>
+                          </div>
+                          <p className="p-5">
                             Estimated Price: ~{data.prices.currency}
                             {Math.round(data.prices.adult)}
                           </p>
@@ -94,14 +113,16 @@ const Oneway = () => {
                     </article>
                     {clicked[data._id] &&
                       (data.connectingAirport_connecting_journey ? (
-                        <article className="flex flex-col border rounded py-3 px-3 mb-3">
+                        <article className="flex flex-col border rounded-lg bg-indigo-200 py-3 px-3 mb-3">
                           <div className=" grid grid-cols-2 divide-x-2">
                             <div className="p-4 w-full flex flex-col items-end">
-                              <h2>
-                                {flights.departureDestination}
-                                {" => "}
-                                {flights.intermediateDestination}
-                              </h2>
+                            <div className="flex flex-row items-center border-b-2 pb-2 justify-start mb-2">
+                            <h2 className="px-4 text-indigo-900">{flights.departureDestination}</h2>
+                            <FaPlaneDeparture className="text-indigo-900"/>
+                            <h2 className="px-4 text-indigo-900">
+                              {flights.intermediateDestination}
+                            </h2>
+                            </div>
                               <h3>
                                 Flight id:{" "}
                                 {data.departureAirport_start_journey.flight_id}
@@ -177,7 +198,7 @@ const Oneway = () => {
                                   }
                                 </p>
                                 <select
-                                  className="border ml-1"
+                                  className="py-1 px-1 ml-1 rounded-full shadow-inner text-indigo-900"
                                   value={selectedAdultOption}
                                   onChange={(
                                     e: React.ChangeEvent<HTMLSelectElement>
@@ -204,7 +225,8 @@ const Oneway = () => {
                                   }
                                 </p>
                                 <select
-                                  className="border ml-1"
+                                                                    className="py-1 px-1 ml-1 rounded-full shadow-inner text-indigo-900"
+
                                   value={selectedChildOption}
                                   onChange={(
                                     e: React.ChangeEvent<HTMLSelectElement>
@@ -220,11 +242,13 @@ const Oneway = () => {
                               </div>
                             </div>
                             <div className="p-4 w-full">
-                              <h2>
-                                {flights.intermediateDestination}
-                                {" => "}
-                                {flights.arrivalDestination}
-                              </h2>
+                            <div className="flex flex-row items-center border-b-2 pb-2 justify-start mb-2">
+                              <h2 className="px-4 text-indigo-900">{flights.intermediateDestination}</h2>
+                              <FaPlaneArrival className="text-indigo-900"/>
+                            <h2 className="px-4 text-indigo-900">
+                              {flights.arrivalDestination}
+                            </h2>
+                            </div>
                               <h3>
                                 Flight id:{" "}
                                 {
@@ -303,7 +327,8 @@ const Oneway = () => {
                                   }
                                 </p>
                                 <select
-                                  className="border ml-1"
+                                                                    className="py-1 px-1 ml-1 rounded-full shadow-inner text-indigo-900"
+
                                   value={selectedAdultConnectingOption}
                                   onChange={(
                                     e: React.ChangeEvent<HTMLSelectElement>
@@ -334,7 +359,8 @@ const Oneway = () => {
                                   }
                                 </p>
                                 <select
-                                  className="border ml-1"
+                                                                    className="py-1 px-1 ml-1 rounded-full shadow-inner text-indigo-900"
+
                                   value={selectedChildConnectingOption}
                                   onChange={(
                                     e: React.ChangeEvent<HTMLSelectElement>
@@ -379,45 +405,51 @@ const Oneway = () => {
                                 returnStartDate,
                                 returnEndDate,
                                 departureAt,
-                                arrivalAt
+                                arrivalAt,
+                                showToastMessage
                               )
                             }
-                            className="border rounded px-2 py-1 w-25 self-center mt-2"
+                            className="self-end border-solid border rounded-full bg-white text-indigo-200 ease-in-out duration-300 hover:bg-indigo-300 hover:text-white shadow px-3 py-1 mt-1"
                           >
                             Add to Cart
                           </button>
                         </article>
                       ) : (
-                        <article className="flex flex-col border rounded py-3 px-3 mb-3">
-                          <h3>Flight id: {data.flight_id}</h3>
-                          <h3>
-                            Departure:{" "}
-                            {new Intl.DateTimeFormat("en-US", {
-                              dateStyle: "long",
-                            }).format(new Date(data.departureAt))}{" "}
-                            {new Intl.DateTimeFormat("en-US", {
-                              timeStyle: "long",
-                            }).format(new Date(data.departureAt))}
-                          </h3>
-                          <h3>
-                            Arrival:{" "}
-                            {new Intl.DateTimeFormat("en-US", {
-                              dateStyle: "long",
-                            }).format(new Date(data.arrivalAt))}{" "}
-                            {new Intl.DateTimeFormat("en-US", {
-                              timeStyle: "long",
-                            }).format(new Date(data.arrivalAt))}
-                          </h3>
-                          <h3>
-                            Duration:{" "}
-                            {flightTime(data.departureAt, data.arrivalAt).hours}{" "}
-                            Hours{" "}
-                            {
-                              flightTime(data.departureAt, data.arrivalAt)
-                                .minutes
-                            }{" "}
-                            min
-                          </h3>
+                        <article className="flex flex-col border rounded-lg bg-indigo-200 py-5 px-5 mb-3">
+                          <div className="flex flex-row justify-evenly divide-x-2">
+                            <div className="w-1/2 p-3 ">
+                              <h3>Flight id: {data.flight_id}</h3>
+                              <h3>
+                                Departure:{" "}
+                                {new Intl.DateTimeFormat("en-US", {
+                                  dateStyle: "long",
+                                }).format(new Date(data.departureAt))}{" "}
+                                {new Intl.DateTimeFormat("en-US", {
+                                  timeStyle: "long",
+                                }).format(new Date(data.departureAt))}
+                              </h3>
+                              <h3>
+                                Arrival:{" "}
+                                {new Intl.DateTimeFormat("en-US", {
+                                  dateStyle: "long",
+                                }).format(new Date(data.arrivalAt))}{" "}
+                                {new Intl.DateTimeFormat("en-US", {
+                                  timeStyle: "long",
+                                }).format(new Date(data.arrivalAt))}
+                              </h3>
+                              <h3>
+                                Duration:{" "}
+                                {flightTime(data.departureAt, data.arrivalAt).hours}{" "}
+                                Hours{" "}
+                                {
+                                  flightTime(data.departureAt, data.arrivalAt)
+                                    .minutes
+                                }{" "}
+                                min
+                              </h3>
+                            </div>
+                            <div className="w-1/2 p-3">
+
                           <p>
                             Available seats:{" "}
                             {data.availableSeats -
@@ -429,7 +461,8 @@ const Oneway = () => {
                               Adult: {data.prices.currency} {data.prices.adult}
                             </p>
                             <select
-                              className="border ml-1"
+                                                                className="py-1 px-1 ml-1 rounded-full shadow-inner text-indigo-900"
+
                               value={selectedAdultDirectOption}
                               onChange={(
                                 e: React.ChangeEvent<HTMLSelectElement>
@@ -445,7 +478,8 @@ const Oneway = () => {
                               Child: {data.prices.currency} {data.prices.child}
                             </p>
                             <select
-                              className="border ml-1"
+                                                                className="py-1 px-1 ml-1 rounded-full shadow-inner text-indigo-900"
+
                               value={selectedChildDirectOption}
                               onChange={(
                                 e: React.ChangeEvent<HTMLSelectElement>
@@ -455,6 +489,8 @@ const Oneway = () => {
                                 <option value={seats}>{seats}</option>
                               ))}
                             </select>
+                          </div>
+                            </div>
                           </div>
                           <button
                             onClick={() =>
@@ -481,10 +517,12 @@ const Oneway = () => {
                                 returnStartDate,
                                 returnEndDate,
                                 departureAt,
-                                arrivalAt
+                                arrivalAt,
+                                showToastMessage
                               )
                             }
-                            className="border rounded px-2 py-1 w-25 self-end mt-2"
+                            className="self-end border-solid border rounded-full bg-white text-indigo-200 ease-in-out duration-300 hover:bg-indigo-300 hover:text-white shadow px-3 py-1 mt-1"
+
                           >
                             Add to Cart
                           </button>

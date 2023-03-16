@@ -72,6 +72,8 @@ export interface States {
   setFilter: React.Dispatch<React.SetStateAction<string[]>>;
   isLoggedIn: boolean;
   setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteFlightCart: boolean;
+  setDeleteFlightCart: React.Dispatch<React.SetStateAction<boolean>>;
   addedToCart: boolean;
   setAddedToCart: React.Dispatch<React.SetStateAction<boolean>>;
   checkbox: boolean;
@@ -82,6 +84,8 @@ export interface States {
   setDepartureAt: React.Dispatch<React.SetStateAction<string | undefined>>
   arrivalAt: string | undefined
   setArrivalAt: React.Dispatch<React.SetStateAction<string | undefined>>
+  cartCount: number
+  setCartCount: React.Dispatch<React.SetStateAction<number>>
   returnEndDate: Date | null, 
   setReturnEndDate: React.Dispatch<React.SetStateAction<Date | null>>
   returnStartDate: Date | null, 

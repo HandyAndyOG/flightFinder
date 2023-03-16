@@ -21,7 +21,8 @@ export const bookFlight = (
   returnStartDate: any,
   returnEndDate: any,
   departureAt: string | undefined,
-  arrivalAt: string | undefined
+  arrivalAt: string | undefined,
+  showToastMessage: any
 ) => {
   if (!checkbox) {
     if (Number(selectedChildOption) > 0 || Number(selectedAdultOption) > 0) {
@@ -63,7 +64,10 @@ export const bookFlight = (
       fetch("http://localhost:8080/api/user/cart", requestOptions)
         .then((response) => response.json())
         .then((data) => {
-          return data.status === "success" ? setAddedToCart(!addedToCart) : "";
+          if(data.status === 'success') {
+            setAddedToCart(!addedToCart)
+            showToastMessage()
+          }
         })
         .catch((err) => console.log(err))
         .finally(() => {
@@ -100,7 +104,10 @@ export const bookFlight = (
       fetch("http://localhost:8080/api/user/cart", requestOptions)
         .then((response) => response.json())
         .then((data) => {
-          return data.status === "success" ? setAddedToCart(!addedToCart) : "";
+          if(data.status === 'success') {
+            setAddedToCart(!addedToCart)
+            showToastMessage()
+          }
         })
         .catch((err) => console.log(err))
         .finally(() => {
@@ -148,8 +155,10 @@ export const bookFlight = (
       fetch("http://localhost:8080/api/user/cart", requestOptions)
         .then((response) => response.json())
         .then((data) => {
-          return data.status === "success" ? setAddedToCart(!addedToCart) : "";
-        })
+          if(data.status === 'success') {
+            setAddedToCart(!addedToCart)
+            showToastMessage()
+          }        })
         .catch((err) => console.log(err))
         .finally(() => {
           setSelectedChildOption("");
@@ -188,13 +197,14 @@ export const bookFlight = (
       fetch("http://localhost:8080/api/user/cart", requestOptions)
         .then((response) => response.json())
         .then((data) => {
-          return data.status === "success" ? setAddedToCart(!addedToCart) : "";
-        })
+          if(data.status === 'success') {
+            setAddedToCart(!addedToCart)
+            showToastMessage()
+          }        })
         .catch((err) => console.log(err))
         .finally(() => {
           setSelectedAdultDirectOption("");
           setSelectedChildDirectOption("");
-          // setAllFlights([]);
           searchReturnFlight(returnStartDate, returnEndDate, setAllFlights, departureAt,
             arrivalAt);
         });

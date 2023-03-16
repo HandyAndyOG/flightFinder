@@ -1,7 +1,6 @@
 import React, { createContext, useState } from "react";
 import { States, Flights, User } from "../Types/types";
 
-
 export const FlightContext = createContext<States>({
   allFlights: [],
   setAllFlights: () => {},
@@ -19,16 +18,20 @@ export const FlightContext = createContext<States>({
   setAddedToCart: () => {},
   checkbox: false,
   setCheckbox: () => {},
+  deleteFlightCart: false,
+  setDeleteFlightCart: () => {},
   localstorage: "",
   setLocalstorage: () => {},
-  returnEndDate: null, 
+  returnEndDate: null,
   setReturnEndDate: () => {},
-  returnStartDate: null, 
+  returnStartDate: null,
   setReturnStartDate: () => {},
-  departureAt: '', 
+  departureAt: "",
   setDepartureAt: () => {},
-  arrivalAt: '', 
-  setArrivalAt: () => {}
+  arrivalAt: "",
+  setArrivalAt: () => {},
+  cartCount: 0,
+  setCartCount: () => {},
 });
 
 const FlightProvider: React.FC<{ children: React.ReactElement }> = ({
@@ -40,6 +43,7 @@ const FlightProvider: React.FC<{ children: React.ReactElement }> = ({
   const [filter, setFilter] = useState<string[]>([]);
   const [token, setToken] = useState<string | undefined>();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [deleteFlightCart, setDeleteFlightCart] = useState<boolean>(false);
   const [localstorage, setLocalstorage] = useState<string | null>(
     localStorage.getItem("token")
   );
@@ -49,21 +53,26 @@ const FlightProvider: React.FC<{ children: React.ReactElement }> = ({
   const [returnEndDate, setReturnEndDate] = useState<Date | null>(null);
   const [departureAt, setDepartureAt] = useState<string | undefined>("");
   const [arrivalAt, setArrivalAt] = useState<string | undefined>("");
-  
+  const [cartCount, setCartCount] = useState(0);
 
   return (
     <FlightContext.Provider
       value={{
-        arrivalAt, 
+        deleteFlightCart,
+        setDeleteFlightCart,
+        cartCount,
+        setCartCount,
+        arrivalAt,
         setArrivalAt,
-        departureAt, 
+        departureAt,
         setDepartureAt,
-        returnStartDate, 
+        returnStartDate,
         setReturnStartDate,
-        returnEndDate, 
+        returnEndDate,
         setReturnEndDate,
-        checkbox, setCheckbox,
-        addedToCart, 
+        checkbox,
+        setCheckbox,
+        addedToCart,
         setAddedToCart,
         localstorage,
         setLocalstorage,

@@ -18,10 +18,10 @@ const Search = () => {
     setReturnStartDate,
     returnEndDate,
     setReturnEndDate,
-    arrivalAt, 
+    arrivalAt,
     setArrivalAt,
-    departureAt, 
-    setDepartureAt
+    departureAt,
+    setDepartureAt,
   } = useContext(FlightContext);
 
   const handleStartDateChange = (date: Date | null) => {
@@ -59,32 +59,32 @@ const Search = () => {
   };
 
   return (
-    <section className="border mt-2 px-3 py-5 mb-3">
+    <section className="rounded-lg bg-indigo-300 text-white shadow mt-2 px-3 py-5 mb-3 w-4/5">
       <form onSubmit={handleSubmit}>
         <label>Depart from: </label>
         <input
-          className="border py-1 px-2 mr-1"
+          className="py-1 px-2 mr-3 rounded-full shadow-inner text-indigo-900"
           placeholder="e.g. Stockholm"
           value={departureAt}
           onChange={(e) => setDepartureAt(e.target.value)}
         />
         <label>Arrive At: </label>
         <input
-          className="border py-1 px-2 mr-1"
+          className="py-1 px-2 mr-3 rounded-full shadow-inner text-indigo-900"
           placeholder="e.g. Oslo"
           value={arrivalAt}
           onChange={(e) => setArrivalAt(e.target.value)}
         />
-        <label>Round Trip</label>
+        <label>Round Trip: </label>
         <input type="checkbox" onChange={() => setCheckbox(!checkbox)} />
         {checkbox ? (
           <>
-            <section className="border mt-2 px-3 py-5">
-              <h2 className="self-center">Departure trip</h2>
+            <section className="mt-2 px-3 py-5">
+              <h2 className="self-center font-semibold">Departure trip</h2>
               <div className="flex flex-row">
                 <label className="w-6/12">Depart Date: </label>
                 <DatePicker
-                  className="border"
+                  className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                   selected={startDate}
                   onChange={handleStartDateChange}
                   selectsStart
@@ -101,7 +101,7 @@ const Search = () => {
                 />
                 <label className="w-6/12">Arrival Date: </label>
                 <DatePicker
-                  className="border"
+                className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                   selected={endDate}
                   onChange={handleEndDateChange}
                   selectsEnd
@@ -119,12 +119,12 @@ const Search = () => {
                 />
               </div>
             </section>
-            <section className="border mt-2 px-3 py-5">
-              <h2 className="self-center">Return trip</h2>
+            <section className="mt-2 px-3 py-5">
+              <h2 className="self-center font-semibold">Return trip</h2>
               <div className="flex flex-row">
                 <label className="w-6/12">Depart Date: </label>
                 <DatePicker
-                  className="border"
+                className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                   selected={returnStartDate}
                   onChange={handleReturnStartDateChange}
                   selectsStart
@@ -141,7 +141,7 @@ const Search = () => {
                 />
                 <label className="w-6/12">Arrival Date: </label>
                 <DatePicker
-                  className="border"
+className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                   selected={returnEndDate}
                   onChange={handleReturnEndDateChange}
                   selectsEnd
@@ -166,7 +166,7 @@ const Search = () => {
             <div className="flex flex-row">
               <label className="w-6/12">Depart Date: </label>
               <DatePicker
-                className="border"
+className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                 selected={startDate}
                 onChange={handleStartDateChange}
                 selectsStart
@@ -183,7 +183,7 @@ const Search = () => {
               />
               <label className="w-6/12">Arrival Date: </label>
               <DatePicker
-                className="border"
+className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                 selected={endDate}
                 onChange={handleEndDateChange}
                 selectsEnd
@@ -203,7 +203,7 @@ const Search = () => {
           </section>
         )}
         <button
-          className="border-solid border rounded px-3 py-1 mt-1"
+          className="border-solid border rounded-full bg-white text-indigo-300 ease-in-out duration-300 hover:bg-indigo-300 hover:text-white shadow px-3 py-1 mt-1"
           type="submit"
         >
           Search
