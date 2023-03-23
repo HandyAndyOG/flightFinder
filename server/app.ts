@@ -16,6 +16,7 @@ app.use(bp.urlencoded({ extended: true }));
 
 app.use(function(_: Request, res: Response, next: NextFunction) {
   res.header("Access-Control-Allow-Origin", `${process.env.FRONT_URL}`);
+  res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });

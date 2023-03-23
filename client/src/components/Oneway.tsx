@@ -113,7 +113,7 @@ const Oneway = () => {
                     </article>
                     {clicked[data._id] &&
                       (data.connectingAirport_connecting_journey ? (
-                        <article className="flex flex-col border rounded-lg bg-indigo-200 py-3 px-3 mb-3">
+                        <article key={uuidv4()} className="flex flex-col border rounded-lg bg-indigo-200 py-3 px-3 mb-3">
                           <div className=" grid grid-cols-2 divide-x-2">
                             <div className="p-4 w-full flex flex-col items-end">
                             <div className="flex flex-row items-center border-b-2 pb-2 justify-start mb-2">
@@ -415,7 +415,7 @@ const Oneway = () => {
                           </button>
                         </article>
                       ) : (
-                        <article className="flex flex-col border rounded-lg bg-indigo-200 py-5 px-5 mb-3">
+                        <article key={uuidv4()} className="flex flex-col border rounded-lg bg-indigo-200 py-5 px-5 mb-3">
                           <div className="flex flex-row justify-evenly divide-x-2">
                             <div className="w-1/2 p-3 ">
                               <h3>Flight id: {data.flight_id}</h3>
