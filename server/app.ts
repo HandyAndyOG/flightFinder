@@ -14,6 +14,11 @@ const bp = require("body-parser");
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 app.use(cors());
+app.use(function(_: Request, res: Response, next: NextFunction) {
+  res.header("Access-Control-Allow-Origin", `${process.env.FRONT_URL}`);
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 const accessTokenSecret: string | undefined = process.env.ACCESS_TOKEN_SECRET;
 
