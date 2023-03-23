@@ -15,7 +15,7 @@ app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 
 app.use(function(req: Request, res: Response, next: NextFunction) {
-  res.header("Access-Control-Allow-Origin", 'https://main--jazzy-snickerdoodle-4d4846.netlify.app/');
+  res.header("Access-Control-Allow-Origin", 'https://main--jazzy-snickerdoodle-4d4846.netlify.app');
   res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   if (req.method === "OPTIONS") {
