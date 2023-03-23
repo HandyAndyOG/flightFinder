@@ -2,7 +2,7 @@ import React from "react";
 import Search from "./Search";
 import FlightCard from "./FlightCard";
 import Nav from "./Nav";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 

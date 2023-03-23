@@ -18,6 +18,6 @@ export const authToken = (
 
   fetch("http://localhost:8080/api/user", requestOptions)
     .then((response) => response.json())
-    .then((result) => {return setUser(result), setIsLoggedIn(!isLoggedIn)})
+    .then((result) => {return (setUser(result), setIsLoggedIn(!isLoggedIn))})
     .catch((error) => console.log("error", error));
 };

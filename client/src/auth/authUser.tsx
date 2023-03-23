@@ -1,6 +1,4 @@
 import { User } from "../Types/types";
-import { NavigateFn } from '@reach/router';
-
 
 export const authUser = (
   token: string,
@@ -20,11 +18,10 @@ export const authUser = (
   fetch("http://localhost:8080/api/user", requestOptions)
     .then((response) => response.json())
     .then((result) => {
-        return setUser(result),
+        return (setUser(result),
         result.status === "success"
           ? navigate("/")
-          : navigate("/login"),
-          console.log(result)
-    })
+          : navigate("/login")
+    )})
     .catch((error) => console.log("error", error));
 };

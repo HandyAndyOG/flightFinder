@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext } from "react";
 import { FlightContext } from "../stateManagement/FlightContext";
 import { v4 as uuidv4 } from "uuid";
 import Nav from "./Nav";
@@ -47,13 +47,13 @@ const Cart = () => {
         fetch("http://localhost:8080/api/user/cart", requestOptions)
           .then((response) => response.json())
           .then((data) => {
-            return setUser(data), setCartCount(data.cart.length);
+            return (setUser(data), setCartCount(data.cart.length))
           })
           .catch((err) => console.log(err));
       };
       fetchUsersCart();
     }
-  }, [token, localstorage, addedToCart, deleteFlightCart]);
+  }, [token, localstorage, addedToCart, deleteFlightCart, setCartCount, setToken, setUser]);
 
   const removeFromcart = (data: any) => {
     const headers = {

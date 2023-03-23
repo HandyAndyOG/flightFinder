@@ -7,7 +7,7 @@ const LoginForm = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [checkbox, setCheckbox] = useState<boolean>(false);
-  const { token, setToken, isLoggedIn, setIsLoggedIn, setUser } =
+  const { setToken, isLoggedIn, setIsLoggedIn, setUser } =
     useContext(FlightContext);
   const navigate = useNavigate();
 

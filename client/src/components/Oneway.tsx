@@ -7,7 +7,7 @@ import { FaPlaneDeparture, FaPlaneArrival } from "react-icons/fa";
 import { bookFlight } from "../helperFunctions/bookFlights";
 import { flightTime } from "../helperFunctions/flightTime";
 import { searchReturnFlight } from "../helperFunctions/searchReturnFlight";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 interface FlightData {

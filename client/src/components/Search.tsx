@@ -53,7 +53,7 @@ const Search = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        return setAllFlights(data), console.log(data);
+        return (setAllFlights(data), console.log(data));
       })
       .catch((err) => console.log(err));
   };

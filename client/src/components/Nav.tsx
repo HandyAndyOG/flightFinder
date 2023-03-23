@@ -38,13 +38,13 @@ const Nav = () => {
         fetch("http://localhost:8080/api/user/cart", requestOptions)
           .then((response) => response.json())
           .then((data) => {
-            return setUser(data), setCartCount(data.cart.length);
+            return (setUser(data), setCartCount(data.cart.length));
           })
           .catch((err) => console.log(err));
       };
       fetchUsersCart();
     }
-  }, [token, localstorage, addedToCart, deleteFlightCart]);
+  }, [token, localstorage, addedToCart, deleteFlightCart, setCartCount, setToken, setUser]);
 
   const logout = () => {
     setLocalstorage('')
