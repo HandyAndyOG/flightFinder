@@ -41,7 +41,7 @@ const Search = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    fetch("http://localhost:8080/api/flights/selectedTimes", {
+    fetch(`${process.env.REACT_APP_URL}api/flights/selectedTimes`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

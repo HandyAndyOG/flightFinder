@@ -44,7 +44,7 @@ const Cart = () => {
           method: "GET",
           headers: headers,
         };
-        fetch("http://localhost:8080/api/user/cart", requestOptions)
+        fetch(`${process.env.REACT_APP_URL}api/user/cart`, requestOptions)
           .then((response) => response.json())
           .then((data) => {
             return (setUser(data), setCartCount(data.cart.length))
@@ -66,7 +66,7 @@ const Cart = () => {
       headers: headers,
       body: JSON.stringify({ flightId: data._id }),
     };
-    fetch("http://localhost:8080/api/user/cart/", requestOptions)
+    fetch(`${process.env.REACT_APP_URL}api/user/cart/`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
@@ -99,7 +99,7 @@ const Cart = () => {
         headers: headers,
         body: JSON.stringify(flightCheckout),
       };
-      fetch("http://localhost:8080/api/user/cart/checkout", requestOptions)
+      fetch(`${process.env.REACT_APP_URL}api/user/cart/checkout`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           return data.status === "success" ? showToastMessage() : "";
@@ -121,7 +121,7 @@ const Cart = () => {
         headers: headers,
         body: JSON.stringify(flightCheckout),
       };
-      fetch("http://localhost:8080/api/user/cart/checkout", requestOptions)
+      fetch(`${process.env.REACT_APP_URL}api/user/cart/checkout`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           return data.status === "success" ? showToastMessage() : "";

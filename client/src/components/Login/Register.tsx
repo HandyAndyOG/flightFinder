@@ -11,7 +11,7 @@ const NewUserForm = () => {
   const handleSubmit = (e:  React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (confirmPassword === password) {
-    fetch('http://localhost:8080/api/user/register', {
+    fetch(`${process.env.REACT_APP_URL}api/user/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, password: password, role: role })

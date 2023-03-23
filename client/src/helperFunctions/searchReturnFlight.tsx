@@ -1,7 +1,7 @@
 export const searchReturnFlight = (returnStartDate: any, 
     returnEndDate: any, setAllFlights: any, departureAt: string | undefined,
     arrivalAt: string | undefined) => {
-      fetch("http://localhost:8080/api/flights/selectedTimes", {
+      fetch(`${process.env.REACT_APP_URL}api/flights/selectedTimes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

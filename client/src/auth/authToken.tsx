@@ -16,7 +16,7 @@ export const authToken = (
     headers: headers,
   };
 
-  fetch("http://localhost:8080/api/user", requestOptions)
+  fetch(`${process.env.REACT_APP_URL}api/user`, requestOptions)
     .then((response) => response.json())
     .then((result) => {return (setUser(result), setIsLoggedIn(!isLoggedIn))})
     .catch((error) => console.log("error", error));

@@ -35,7 +35,7 @@ const Nav = () => {
           method: "GET",
           headers: headers,
         };
-        fetch("http://localhost:8080/api/user/cart", requestOptions)
+        fetch(`${process.env.REACT_APP_URL}api/user/cart`, requestOptions)
           .then((response) => response.json())
           .then((data) => {
             return (setUser(data), setCartCount(data.cart.length));

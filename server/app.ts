@@ -49,7 +49,6 @@ const flightChecker = async (
       departureDestination: departureAirport,
       arrivalDestination: { $ne: arrivalAirport },
     });
-    console.log(onlyCorrectDepart, "onlyCorrectDepart");
     const connectingDeparts = onlyCorrectDepart.map((flight) => ({
       departureDestination: flight.arrivalDestination,
     }));
@@ -57,16 +56,13 @@ const flightChecker = async (
       arrivalDestination: arrivalAirport,
       $or: connectingDeparts,
     });
-    console.log(onlyCorrectArrival, "onlyCorrectArrival");
     const connectingArrival = onlyCorrectArrival.map((flight) => ({
       arrivalDestination: flight.departureDestination,
     }));
-    console.log(connectingArrival, "connectingArrival");
     const connectingFlights = onlyCorrectDepart.filter(
       (data) =>
         data.arrivalDestination === connectingArrival[0]?.arrivalDestination
     );
-    console.log(connectingFlights, "connectingFlights");
     const combinedConnectingFlights = connectingFlights.flatMap(
       (departureData) => {
         return onlyCorrectArrival.flatMap((arrivalData) => {
@@ -228,7 +224,6 @@ app.post("/api/flights/selectedTimes", async (req: Request, res: Response) => {
         .filter(Boolean);
 
       const allFlights = [...directFlightsAtTime, ...connectingFlightsAtTime];
-      console.log(allFlights);
       return res.status(200).send(allFlights);
     } else {
       const directFlight = await Flight.find({

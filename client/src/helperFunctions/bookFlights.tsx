@@ -61,7 +61,7 @@ export const bookFlight = (
         headers: headers,
         body: JSON.stringify(flight),
       };
-      fetch("http://localhost:8080/api/user/cart", requestOptions)
+      fetch(`${process.env.REACT_APP_URL}api/user/cart`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           if(data.status === 'success') {
@@ -101,7 +101,7 @@ export const bookFlight = (
         headers: headers,
         body: JSON.stringify(flight),
       };
-      fetch("http://localhost:8080/api/user/cart", requestOptions)
+      fetch(`${process.env.REACT_APP_URL}api/user/cart`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           if(data.status === 'success') {
@@ -152,7 +152,7 @@ export const bookFlight = (
         headers: headers,
         body: JSON.stringify(flight),
       };
-      fetch("http://localhost:8080/api/user/cart", requestOptions)
+      fetch(`${process.env.REACT_APP_URL}api/user/cart`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           if(data.status === 'success') {
@@ -194,7 +194,7 @@ export const bookFlight = (
         headers: headers,
         body: JSON.stringify(flight),
       };
-      fetch("http://localhost:8080/api/user/cart", requestOptions)
+      fetch(`${process.env.REACT_APP_URL}api/user/cart`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
           if(data.status === 'success') {
