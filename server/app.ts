@@ -151,6 +151,10 @@ const flightTime = (departTime: string, arrivalTime: string) => {
   return { hours: diffHours, minutes: remainingMinutes };
 };
 
+app.get("/api", (_: Request, res: Response) => {
+  res.status(200).send('The server is Live')
+})
+
 app.get("/api/flights", async (req: Request, res: Response) => {
   const departureAirport = req.body.departureAt;
   const arrivalAirport = req.body.arrivalAt;
