@@ -13,22 +13,13 @@ const bp = require("body-parser");
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 
-app.use(function(req: Request, res: Response, next: NextFunction) {
-  res.header("Access-Control-Allow-Origin", '*');
-  res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  if (req.method === "OPTIONS") {
-    res.status(200);
-  } else {
-    next();
-  }
+app.use(function(_: Request, res: Response, next: NextFunction) {
+  res.header("Access-Control-Allow-Origin", `${process.env.FRONT_URL}`);
+  // res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
+  // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 });
-app.options('*', (_, res: Response) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'POST, GET, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.sendStatus(200);
-});
+
 
 const accessTokenSecret: string | undefined = process.env.ACCESS_TOKEN_SECRET;
 
