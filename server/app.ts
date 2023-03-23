@@ -7,7 +7,6 @@ import jwt, { VerifyErrors } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 
-
 dotenv.config();
 const app: Application = express();
 const bp = require("body-parser");
