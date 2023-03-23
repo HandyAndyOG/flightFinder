@@ -101,7 +101,7 @@ const Search = () => {
                 />
                 <label className="w-6/12">Arrival Date: </label>
                 <DatePicker
-                className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
+                  className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                   selected={endDate}
                   onChange={handleEndDateChange}
                   selectsEnd
@@ -124,7 +124,7 @@ const Search = () => {
               <div className="flex flex-row">
                 <label className="w-6/12">Depart Date: </label>
                 <DatePicker
-                className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
+                  className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                   selected={returnStartDate}
                   onChange={handleReturnStartDateChange}
                   selectsStart
@@ -141,7 +141,7 @@ const Search = () => {
                 />
                 <label className="w-6/12">Arrival Date: </label>
                 <DatePicker
-className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
+                  className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                   selected={returnEndDate}
                   onChange={handleReturnEndDateChange}
                   selectsEnd
@@ -161,12 +161,12 @@ className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
             </section>
           </>
         ) : (
-          <section className="border mt-2 px-3 py-5">
+          <section className="border rounded mt-2 px-3 py-5">
             <h2 className="self-center">One Way</h2>
             <div className="flex flex-row">
               <label className="w-6/12">Depart Date: </label>
               <DatePicker
-className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
+                className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                 selected={startDate}
                 onChange={handleStartDateChange}
                 selectsStart
@@ -183,7 +183,7 @@ className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
               />
               <label className="w-6/12">Arrival Date: </label>
               <DatePicker
-className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
+                className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
                 selected={endDate}
                 onChange={handleEndDateChange}
                 selectsEnd
