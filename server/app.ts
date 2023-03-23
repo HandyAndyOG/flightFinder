@@ -16,7 +16,7 @@ app.use(bp.urlencoded({ extended: true }));
 app.use(function(_: Request, res: Response, next: NextFunction) {
   res.header("Access-Control-Allow-Origin", `${process.env.FRONT_URL}`);
   // res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
-  // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
   next();
 });
 
@@ -160,6 +160,9 @@ app.get("/api/flights", async (req: Request, res: Response) => {
 });
 
 app.post("/api/flights/selectedTimes", async (req: Request, res: Response) => {
+  // res.header("Access-Control-Allow-Origin", `${process.env.FRONT_URL}`);
+  // res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   const flightSpecifications = req.body;
   const departureTime = new Date(flightSpecifications.departureTime);
   const arrivalTime = new Date(flightSpecifications.arrivalTime);
