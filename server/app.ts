@@ -24,6 +24,12 @@ app.use(function(req: Request, res: Response, next: NextFunction) {
     next();
   }
 });
+app.options('*', (_, res: Response) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'POST, GET, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.sendStatus(200);
+});
 
 const accessTokenSecret: string | undefined = process.env.ACCESS_TOKEN_SECRET;
 
