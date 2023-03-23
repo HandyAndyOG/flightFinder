@@ -1,11 +1,9 @@
 import express from "express";
-import { Request, Response, Application } from "express";
+import { Request, Response, Application, NextFunction } from "express";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
-import { fetchData } from "./controllers/FlightData";
-import { Flight } from "./Model/model";
-import { Users } from "./Model/model";
-import jwt from "jsonwebtoken";
+import { Flight, Users } from "./model/model";
+import jwt, { VerifyErrors } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
@@ -17,24 +15,25 @@ app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 app.use(cors());
 
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
+const accessTokenSecret: string | undefined = process.env.ACCESS_TOKEN_SECRET;
 
-const authenticateToken = (req: any, res: any, next: any) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+const authenticateToken = (req: any, res: Response, next: NextFunction) => {
+  const authHeader: string | undefined = req.headers["authorization"];
+  const token: string | undefined = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
     return res.status(401).send("No valid token");
   }
   if (typeof accessTokenSecret === "string") {
-    jwt.verify(token, accessTokenSecret, (err: any, user: any) => {
+    jwt.verify(token, accessTokenSecret, (err: VerifyErrors | null, user: any) => {
       if (err) {
         return res.status(403).send("No Access");
       }
       req.user = user;
-      next();
+      return next();
     });
   }
+  return;
 };
 
 mongoose.connect(
@@ -140,11 +139,6 @@ const flightTime = (departTime: string, arrivalTime: string) => {
   const remainingMinutes: number = Math.round(diffMinutes % 60);
   return { hours: diffHours, minutes: remainingMinutes };
 };
-
-app.get("/api", async (_: Request, res: Response) => {
-  const allFlights = await fetchData();
-  res.status(200).send(allFlights);
-});
 
 app.get("/api/flights", async (req: Request, res: Response) => {
   const departureAirport = req.body.departureAt;
