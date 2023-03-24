@@ -3,11 +3,12 @@ import DatePicker, { setDefaultLocale, registerLocale } from "react-datepicker";
 import { enGB } from "date-fns/locale";
 import "react-datepicker/dist/react-datepicker.css";
 import { FlightContext } from "../stateManagement/FlightContext";
+import { SearchProps } from "../Types/types";
 
 setDefaultLocale("en");
 registerLocale("en", enGB);
 
-const Search = () => {
+const Search: React.FC<SearchProps>= ({scrollFunction}) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const {
@@ -53,13 +54,16 @@ const Search = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        return (setAllFlights(data), console.log(data));
+        return (setAllFlights(data));
+      })
+      .finally(() => {
+        scrollFunction()
       })
       .catch((err) => console.log(err));
   };
 
   return (
-    <section className="rounded-lg bg-indigo-300 text-white shadow mt-2 px-3 py-5 mb-3 w-4/5">
+    <section className="rounded-lg bg-indigo-400/75  text-white shadow mt-2 px-3 py-5 mb-3 w-4/5">
       <form onSubmit={handleSubmit}>
         <label>Depart from: </label>
         <input

@@ -66,7 +66,7 @@ const Nav = () => {
   }
 
   return (
-    <nav className="flex flex-row p-3 w-full justify-evenly items-start mt-2 z-10 relative shadow-md">
+    <nav className="fixed flex flex-row p-5 w-full justify-evenly items-start z-10 shadow-md bg-indigo-100/50">
       <Link to={'/'}>
         <h1 className='py-1 px-4'>FlightFinder</h1>
       </Link>

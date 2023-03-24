@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import Nav from "./Nav";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import checkout from '../assets/checkout.jpg'
 
 const Cart = () => {
   const {
@@ -134,14 +135,14 @@ const Cart = () => {
     <>
       <Nav />
       {isLoggedIn ? (
-        <section className="flex flex-col items-center bg-indigo-900 h-screen">
+        <section className="flex flex-col items-center bg-indigo-900 h-screen" style={{backgroundImage: `url(${checkout})`, objectFit: 'cover', backgroundRepeat: 'no-repeat', backgroundSize: 'cover'}}>
           <article className="w-3/4 mt-5">
             {user ? (
               user?.cart.map((data) => {
                 return data?.connectingFlight ? (
                   <div
                     key={uuidv4()}
-                    className="flex flex-col p-3 m-1 bg-indigo-100 rounded"
+                    className="flex flex-col p-3 m-1 bg-indigo-100/80 rounded"
                   >
                     <div className="grid grid-cols-2 divide-indigo-300 divide-x-2">
                       <div className="p-4 w-full flex flex-col items-end">
@@ -306,7 +307,7 @@ const Cart = () => {
                 ) : (
                   <div
                     key={uuidv4()}
-                    className="flex flex-col bg-indigo-100 rounded p-3 m-1"
+                    className="flex flex-col bg-indigo-100/80 rounded p-3 m-1"
                   >
                     <div className="flex flex-row justify-between">
                       <p>Flight id: {data?.directFlight?.flight_id}</p>

@@ -47,7 +47,7 @@ const Oneway = () => {
     useState("");
 
   return (
-    <section className="flex items-center flex-col w-3/4  rounded">
+    <section className="flex items-center flex-col w-3/4 rounded">
       {allFlights ? (
         allFlights.map((flights) => {
           return (

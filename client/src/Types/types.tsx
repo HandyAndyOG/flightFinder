@@ -3,6 +3,9 @@ interface Prices {
   adult: number;
   child: number;
 }
+export interface SearchProps {
+  scrollFunction: () => void;
+}
 interface Layover {
   hours: number;
   minutes: number
@@ -54,10 +57,6 @@ interface FlightType {
   directFlight: Cart;
   connectingFlight: ConnectingFlight;
 }
-// export interface Cart {
-//   userId: string | undefined;
-//   cart: UserCart[];
-// }
 
 export interface States {
   allFlights: Flights[];
