@@ -289,7 +289,7 @@ app.post("/api/user/register", async (req: Request, res: Response) => {
       uid: uuidv4(),
       cart: [],
     });
-    return res.status(200).send("New user created successfully!");
+    return res.status(200).send({status: 'success'});
   } catch (err) {
     return res.status(400).send(`failed to create new User, ERROR: ${err}`);
   }

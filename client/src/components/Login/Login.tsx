@@ -10,7 +10,7 @@ const LoginForm = () => {
   const { setToken, isLoggedIn, setIsLoggedIn, setUser } =
     useContext(FlightContext);
   const navigate = useNavigate();
-console.log(isLoggedIn, 'in login')
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     fetch(`${process.env.REACT_APP_URL}api/user/login`, {
@@ -38,6 +38,7 @@ console.log(isLoggedIn, 'in login')
         setCheckbox(false);
       });
   };
+
   return (
     <>
       <section className="flex flex-col items-center justify-center h-screen bg-indigo-100">
@@ -78,7 +79,7 @@ console.log(isLoggedIn, 'in login')
             <span>Remember me</span>
           </div>
           <input
-            className="border-solid border rounded-full bg-white text-indigo-300 ease-in-out duration-300 hover:bg-indigo-300 hover:text-white shadow px-3 py-1 mt-1"
+            className="cursor-pointer border-solid border rounded-full bg-white text-indigo-300 ease-in-out duration-300 hover:bg-indigo-300 hover:text-white shadow px-3 py-1 mt-1"
             type={"submit"}
           />
         </form>

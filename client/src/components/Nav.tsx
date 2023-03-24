@@ -55,11 +55,15 @@ const Nav = () => {
     setUser(null);
     setIsLoggedIn(!isLoggedIn)
     setCartCount(0)
-    navigate('/login')
+    navigate('/')
   }
 
   const login = () => {
     navigate('/login');
+  }
+
+  const register = () => {
+    navigate('/register');
   }
 
   return (
@@ -68,6 +72,7 @@ const Nav = () => {
         <h1 className='py-1 px-4'>FlightFinder</h1>
       </Link>
       {isLoggedIn ? <button onClick={logout} className="border rounded-full py-1 px-4 shadow bg-indigo-600 text-white ease-in-out duration-300 hover:bg-white hover:text-indigo-600">Logout</button> : <button onClick={login} className="border rounded-full py-1 px-4 shadow bg-indigo-600 text-white ease-in-out duration-300 hover:bg-white hover:text-indigo-600">Login</button>}
+      {isLoggedIn ? '' : <button onClick={register} className="border rounded-full py-1 px-4 shadow bg-indigo-600 text-white ease-in-out duration-300 hover:bg-white hover:text-indigo-600">Register</button>}
       <div className="relative block overflow-hidden w-12 h-12 h-auto py-1 px-4">
         {cartCount > 0 ? (
           <span className="animate-bounce absolute left-8 top-1.5 bg-indigo-600 text-white text-center w-4 h-4 rounded-full border-transparent text-[10px] z-20">
