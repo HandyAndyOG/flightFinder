@@ -22,7 +22,6 @@ const Nav = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('inside nav useeffect')
     if (!token && localstorage) {
       setToken(localstorage);
     }

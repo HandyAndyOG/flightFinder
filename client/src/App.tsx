@@ -10,19 +10,17 @@ import { authToken } from "./auth/authToken";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const { setIsLoggedIn, isLoggedIn, token, setToken, localstorage, setUser, user } =
+  const { setIsLoggedIn, isLoggedIn, token, setToken, localstorage, setUser } =
     useContext(FlightContext);
 
   useEffect(() => {
-    console.log('app useeffect')
     if (!token && localstorage) {
       setToken(localstorage);
     } else if (token) {
       authToken(token, setUser, setIsLoggedIn, isLoggedIn);
     }
-  }, [token, setIsLoggedIn, localstorage, setToken, setUser]);
-console.log(user)
-console.log(isLoggedIn, 'in app')
+  }, [token, localstorage, setToken, isLoggedIn, setIsLoggedIn, setUser]);
+
   return (
     <Routes>
       <Route path="/" element={<Home />}></Route>

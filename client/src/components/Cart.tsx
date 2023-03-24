@@ -129,7 +129,7 @@ const Cart = () => {
         .catch((err) => console.log(err));
     }
   };
-console.log(isLoggedIn)
+
   return (
     <>
       <Nav />

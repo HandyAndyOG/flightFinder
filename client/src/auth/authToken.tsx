@@ -18,6 +18,6 @@ export const authToken = (
 
   fetch(`${process.env.REACT_APP_URL}api/user`, requestOptions)
     .then((response) => response.json())
-    .then((result) => {return (setUser(result),isLoggedIn === false ? setIsLoggedIn(true): '')})
+    .then((result) => {return (setUser(result), isLoggedIn === false ? setIsLoggedIn(true): '')})
     .catch((error) => console.log("error", error));
 };
