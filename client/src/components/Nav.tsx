@@ -11,6 +11,7 @@ const Nav = () => {
     token,
     localstorage,
     setLocalstorage,
+    setIsLoggedIn,
     setToken,
     setUser,
     setCartCount,
@@ -21,6 +22,7 @@ const Nav = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('inside nav useeffect')
     if (!token && localstorage) {
       setToken(localstorage);
     }
@@ -50,6 +52,9 @@ const Nav = () => {
     setLocalstorage('')
     localStorage.clear();
     setToken('');
+    setUser(null);
+    setIsLoggedIn(!isLoggedIn)
+    setCartCount(0)
     navigate('/login')
   }
 

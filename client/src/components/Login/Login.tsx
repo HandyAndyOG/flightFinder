@@ -10,7 +10,7 @@ const LoginForm = () => {
   const { setToken, isLoggedIn, setIsLoggedIn, setUser } =
     useContext(FlightContext);
   const navigate = useNavigate();
-
+console.log(isLoggedIn, 'in login')
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     fetch(`${process.env.REACT_APP_URL}api/user/login`, {

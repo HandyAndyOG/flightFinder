@@ -160,9 +160,6 @@ app.get("/api/flights", async (req: Request, res: Response) => {
 });
 
 app.post("/api/flights/selectedTimes", async (req: Request, res: Response) => {
-  // res.header("Access-Control-Allow-Origin", `${process.env.FRONT_URL}`);
-  // res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   const flightSpecifications = req.body;
   const departureTime = new Date(flightSpecifications.departureTime);
   const arrivalTime = new Date(flightSpecifications.arrivalTime);

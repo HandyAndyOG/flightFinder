@@ -129,7 +129,7 @@ const Cart = () => {
         .catch((err) => console.log(err));
     }
   };
-
+console.log(isLoggedIn)
   return (
     <>
       <Nav />
@@ -359,7 +359,9 @@ const Cart = () => {
           <ToastContainer />
         </section>
       ) : (
-        <h1>Please Login</h1>
+        <div className="flex justify-center items-center border p-10 h-screen">
+          <h1 className="text-xl">Please Login, to add to cart</h1>
+        </div>
       )}
     </>
   );
