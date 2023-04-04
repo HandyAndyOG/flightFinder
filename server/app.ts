@@ -15,7 +15,7 @@ const bp = require("body-parser");
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 app.use(cors({
-  origin: 'http://localhost:3003/'
+  origin: 'http://localhost:3003'
 }));
 // origin: 'https://main--jazzy-snickerdoodle-4d4846.netlify.app'
 

@@ -2,6 +2,7 @@ import React, {useRef} from "react";
 import Search from "./Search";
 import FlightCard from "./FlightCard";
 import Nav from "./Nav";
+import '../App.css'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import coverImg from '../assets/test1.jpg'

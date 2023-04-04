@@ -63,8 +63,9 @@ const Search: React.FC<SearchProps>= ({scrollFunction}) => {
   };
 
   return (
-    <section className="rounded-lg bg-indigo-400/75  text-white shadow mt-2 px-3 py-5 mb-3 w-4/5">
+    <section className="rounded-lg bg-indigo-400/75 text-white shadow mt-2 px-3 py-5 mb-3 w-4/5">
       <form onSubmit={handleSubmit}>
+        <div className="flex flex-col">
         <label>Depart from: </label>
         <input
           className="py-1 px-2 mr-3 rounded-full shadow-inner text-indigo-900"
@@ -79,13 +80,18 @@ const Search: React.FC<SearchProps>= ({scrollFunction}) => {
           value={arrivalAt}
           onChange={(e) => setArrivalAt(e.target.value)}
         />
+        <div className="flex flex-row">
+
         <label>Round Trip: </label>
         <input type="checkbox" onChange={() => setCheckbox(!checkbox)} />
+        </div>
+
+        </div>
         {checkbox ? (
           <>
             <section className="mt-2 px-3 py-5">
               <h2 className="self-center font-semibold">Departure trip</h2>
-              <div className="flex flex-row">
+              <div className="flex flex-col sm:flex-row">
                 <label className="w-6/12">Depart Date: </label>
                 <DatePicker
                   className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
@@ -125,7 +131,7 @@ const Search: React.FC<SearchProps>= ({scrollFunction}) => {
             </section>
             <section className="mt-2 px-3 py-5">
               <h2 className="self-center font-semibold">Return trip</h2>
-              <div className="flex flex-row">
+              <div className="flex flex-col sm:flex-row">
                 <label className="w-6/12">Depart Date: </label>
                 <DatePicker
                   className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"
@@ -167,7 +173,7 @@ const Search: React.FC<SearchProps>= ({scrollFunction}) => {
         ) : (
           <section className="border rounded mt-2 px-3 py-5">
             <h2 className="self-center">One Way</h2>
-            <div className="flex flex-row">
+            <div className="flex flex-col sm:flex-row">
               <label className="w-6/12">Depart Date: </label>
               <DatePicker
                 className="py-1 px-2 mr-1 rounded-full shadow-inner text-indigo-900"

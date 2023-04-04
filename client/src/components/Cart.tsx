@@ -136,7 +136,7 @@ const Cart = () => {
       <Nav />
       {isLoggedIn ? (
         <section className="flex flex-col items-center bg-indigo-900 h-screen" style={{backgroundImage: `url(${checkout})`, objectFit: 'cover', backgroundRepeat: 'no-repeat', backgroundSize: 'cover'}}>
-          <article className="w-3/4 mt-5">
+          <article className="sm:w-3/4 mt-5">
             {user ? (
               user?.cart.map((data) => {
                 return data?.connectingFlight ? (

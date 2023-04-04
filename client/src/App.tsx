@@ -1,5 +1,4 @@
 import React, { useContext, useEffect } from "react";
-import "./App.css";
 import Home from "./components/Home";
 import LoginForm from "./components/Login/Login";
 import Register from './components/Login/Register'
@@ -22,12 +21,15 @@ function App() {
   }, [token, localstorage, setToken, isLoggedIn, setIsLoggedIn, setUser]);
 
   return (
+    <div className="App">
     <Routes>
       <Route path="/" element={<Home />}></Route>
       <Route path="/login" element={<LoginForm />}></Route>
       <Route path="/register" element={<Register />}></Route>
       <Route path="/cart" element={<Cart />}></Route>
     </Routes>
+
+    </div>
   );
 }
 
