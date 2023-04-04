@@ -1,4 +1,4 @@
-import { Flight } from "../Model/model";
+import { Flight } from "model/model";
 
 export const fetchData = async () => {
   try {
