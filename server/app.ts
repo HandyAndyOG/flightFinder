@@ -15,9 +15,9 @@ const bp = require("body-parser");
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 app.use(cors({
-  origin: 'http://localhost:3003'
+  origin: 'https://main--jazzy-snickerdoodle-4d4846.netlify.app'
 }));
-// origin: 'https://main--jazzy-snickerdoodle-4d4846.netlify.app'
+// origin: 'http://localhost:3003'
 
 // app.use(function(_: Request, res: Response, next: NextFunction) {
 //   res.header("Access-Control-Allow-Origin", `${process.env.FRONT_URL}`);
