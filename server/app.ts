@@ -6,19 +6,24 @@ import { Flight, Users } from "./model/model";
 import jwt, { VerifyErrors } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
+import cors from 'cors'
+
 
 dotenv.config();
 const app: Application = express();
 const bp = require("body-parser");
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
+app.use(cors({
+  origin: 'https://main--jazzy-snickerdoodle-4d4846.netlify.app'
+}));
 
-app.use(function(_: Request, res: Response, next: NextFunction) {
-  res.header("Access-Control-Allow-Origin", `${process.env.FRONT_URL}`);
-  // res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+// app.use(function(_: Request, res: Response, next: NextFunction) {
+//   res.header("Access-Control-Allow-Origin", `${process.env.FRONT_URL}`);
+//   // res.header("Access-Control-Allow-Methods", "POST, GET, DELETE");
+//   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//   next();
+// });
 
 
 const accessTokenSecret: string | undefined = process.env.ACCESS_TOKEN_SECRET;
